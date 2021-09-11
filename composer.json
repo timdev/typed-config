@@ -1,0 +1,64 @@
+{
+    "name": "timdev/typed-config",
+    "type": "library",
+    "description": "Strongly-typed configuration for PHP applications",
+    "keywords": ["config", "configuration", "array", "dot", "dot-access", "strong typed"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tim Lieberman",
+            "email": "dev@timdev.com",
+            "homepage": "https://www.timdev.com/"
+        },{
+            "name": "Justin Emmanuel Mercado",
+            "email": "ej@ejmercado.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "symfony/polyfill-php80": "^1.23",
+        "symfony/polyfill-php81": "^1.23"
+    },
+    "require-dev": {
+        "timdev/devtools": "^0.1.6"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "TimDev\\TypedConfig\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TimDev\\Test\\TypedConfig\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "dev": "@dev:qa",
+        "dev:analyze": "psalm",
+        "dev:coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always",
+        "dev:coverage:html": "XDEBUG_MODE=coverage phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
+        "dev:cs": "phpcs",
+        "dev:cs:fix": "phpcbf",
+        "dev:qa": [
+            "@dev:analyze",
+            "@dev:test",
+            "@dev:cs"
+        ],
+        "dev:test": "phpunit --testdox --color=always"
+    },
+    "scripts-descriptions": {
+        "dev": "Shortcut for dev:qa.",
+        "dev:analyze": "Run static analysis with psalm.",
+        "dev:coverage": "Report unit test coverage with output in the terminal.",
+        "dev:coverage:html": "Generate unit test coverage report.",
+        "dev:cs": "Run code style checks.",
+        "dev:cs:fix": "Fix code style violations.",
+        "dev:qa": "Run all quality checks (tests, static analysis, and coding standard).",
+        "dev:test": "Run unit tests."
+    }
+}

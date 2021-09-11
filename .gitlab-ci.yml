@@ -1,0 +1,26 @@
+# We want to cache the vendor dir.
+cache:
+  # this expands to the branch, eg: 'master'
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - vendor/
+
+before_script:
+# We need git and PHP's zip extension.
+- apt-get update -yqq && apt-get install libzip-dev git -yqq
+- docker-php-ext-install zip
+
+# Install composer
+- curl -sS https://getcomposer.org/installer | php
+
+# Install all project dependencies
+- php composer.phar install
+
+test:php8.0:
+  image: php:8.0-cli
+  script:
+  - php composer.phar dev:qa
+test:php7.4:
+  image: php:7.4-cli
+  script:
+  - php composer.phar dev:qa
