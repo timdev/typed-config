@@ -125,6 +125,7 @@ class ConfigTest extends TestCase
         $result = (new Config($this->testConfig))->string('spaces are.actually fine');
         assertSame("see?", $result);
     }
+
     public function testNullableCanReturnNullValues(): void
     {
         $config = new Config($this->testConfig);
@@ -189,10 +190,28 @@ class ConfigTest extends TestCase
         $maybe->mixed('a.somewhat.deeply.nested.does.not.exist');
     }
 
-    public function testGetConfigArrayBack(): void
+    public function testCanGetConfigArrayBack(): void
     {
         $array = ['minimum_puppies' => 5];
         $config = new Config($array);
         assertSame($array, $config->toArray());
+    }
+
+    public function testCanFlattenConfig(): void
+    {
+        $config = new Config($this->testConfig);
+        $flat = $config->toFlatArray();
+        assertSame('qux', $flat['key_for_hash.baz']);
+        assertSame('strings', $flat['key_for_list.3']);
+        assertSame('ACTUALLY, A ROPE', $flat['a.somewhat.deeply.nested.string']);
+    }
+
+    public function testCanFlattenConfigWithDelimiter(): void
+    {
+        $config = new Config($this->testConfig);
+        $flat = $config->toFlatArray('|-|');
+        assertSame('qux', $flat['key_for_hash|-|baz']);
+        assertSame('strings', $flat['key_for_list|-|3']);
+        assertSame('ACTUALLY, A ROPE', $flat['a|-|somewhat|-|deeply|-|nested|-|string']);
     }
 }

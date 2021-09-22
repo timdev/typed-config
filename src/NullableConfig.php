@@ -149,6 +149,37 @@ class NullableConfig
         return $clone;
     }
 
+    /** @return array<string,mixed> */
+    private static function dot(array $array, string $delim = '.', string $prepend = ''): array
+    {
+        $results = [];
+
+        /** @psalm-var mixed $value */
+        foreach ($array as $key => $value) {
+            if (is_array($value) && ! empty($value)) {
+                $results[] = static::dot($value, $delim, $prepend . $key . $delim);
+            } else {
+                /** @var mixed */
+                $results[][$prepend . $key] = $value;
+            }
+        }
+
+        /** @psalm-var array<string,mixed> */
+        return array_merge(...$results);
+    }
+
+    /**
+     * Returns a flattened array of the configuration, with keys constructed
+     * using $delimiter as glue.
+     *
+     * @param string $delimiter
+     * @return array<string,mixed>
+     */
+    public function toFlatArray(string $delimiter = '.'): array
+    {
+        return self::dot($this->toArray(), $delimiter);
+    }
+
     /**
      * If a top-level element with this key is set to boolean true, the config
      * data are assumed valid, and all checks are skipped. The array returned by

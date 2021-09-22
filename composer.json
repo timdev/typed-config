@@ -2,14 +2,22 @@
     "name": "timdev/typed-config",
     "type": "library",
     "description": "Strongly-typed configuration for PHP applications",
-    "keywords": ["config", "configuration", "array", "dot", "dot-access", "strong typed"],
+    "keywords": [
+        "config",
+        "configuration",
+        "array",
+        "dot",
+        "dot-access",
+        "strong typed"
+    ],
     "license": "MIT",
     "authors": [
         {
             "name": "Tim Lieberman",
             "email": "dev@timdev.com",
             "homepage": "https://www.timdev.com/"
-        },{
+        },
+        {
             "name": "Justin Emmanuel Mercado",
             "email": "ej@ejmercado.com"
         }
