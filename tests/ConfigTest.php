@@ -188,4 +188,11 @@ class ConfigTest extends TestCase
         $maybe = $config->nullable;
         $maybe->mixed('a.somewhat.deeply.nested.does.not.exist');
     }
+
+    public function testGetConfigArrayBack(): void
+    {
+        $array = ['minimum_puppies' => 5];
+        $config = new Config($array);
+        assertSame($array, $config->toArray());
+    }
 }

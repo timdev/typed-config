@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace TimDev\TypedConfig;
 
 use LogicException;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
+use TimDev\TypedConfig\Exception\ContainsDottedKeys;
 use TimDev\TypedConfig\Exception\InvalidConfigKey;
 use TimDev\TypedConfig\Exception\KeyNotFound;
 
@@ -137,5 +140,70 @@ class NullableConfig
         assert(is_array($val), "Expected a hash at '$key', but it isn't an array");
         assert(!array_is_list($val) || count($val) === 0, "Expected a hash at '$key', but found a list");
         return $val;
+    }
+
+    public function toArray(): array
+    {
+        $clone = $this->config;
+        unset($clone[self::FLAG_VALID]);
+        return $clone;
+    }
+
+    /**
+     * If a top-level element with this key is set to boolean true, the config
+     * data are assumed valid, and all checks are skipped. The array returned by
+     * validate() will always have this key set. This behavior exists to enable
+     * fast instantiation of cached known-good data.
+     */
+    public const FLAG_VALID = '_TimDevTypedConfig_Valid';
+
+    /**
+     * Sets validity flag in $array and returns it, or throws if array contains
+     * dotted-string keys.
+     *
+     * @param array $array
+     * @return array
+     * @throws ContainsDottedKeys
+     */
+    public static function validate(array &$array): array
+    {
+        // only skip validation if flag is set to boolean true.
+        if ($array[self::FLAG_VALID] ?? false !== true) {
+            self::assertNoDottedKeys($array);
+            $array[self::FLAG_VALID] = true;
+        }
+        return $array;
+    }
+
+    /**
+     * @param array              $config
+     * @param list<string>       $path
+     * @param list<list<string>> $dotted
+     * @return list<string>
+     */
+    private static function findErrors(array $config, array $path = [], array &$dotted = []): array
+    {
+        /** @var mixed $v */
+        foreach ($config as $k => $v) {
+            if (is_string($k) && str_contains($k, '.')) {
+                $dotted[] = [...$path, $k];
+            }
+            if (is_array($v)) {
+                self::findErrors($v, [...$path, $k], $dotted);
+            }
+        }
+
+        return array_map(
+            static fn($d) => implode(' => ', $d),
+            $dotted
+        );
+    }
+
+    private static function assertNoDottedKeys(array $array): void
+    {
+        $dotted = self::findErrors($array);
+        if (count($dotted) > 0) {
+            throw ContainsDottedKeys::from($dotted);
+        }
     }
 }
