@@ -15,7 +15,6 @@ use function is_string;
 
 final class Config extends NullableConfig
 {
-
     /** @readonly */
     public NullableConfig $nullable;
 
