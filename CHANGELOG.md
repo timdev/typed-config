@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## 0.1.2 - 2021-12-19
+
+### Added
+
+* Added support for PHP 8.1.
+
+### Changed
+
+* Minor code-style fixes.
+
 ## 0.1.1 - 2021-09-22
 
 ### Added
