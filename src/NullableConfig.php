@@ -199,7 +199,7 @@ class NullableConfig
     public static function validate(array &$array): array
     {
         // only skip validation if flag is set to boolean true.
-        if ($array[self::FLAG_VALID] ?? false !== true) {
+        if (($array[self::FLAG_VALID] ?? false) !== true) {
             self::assertNoDottedKeys($array);
             $array[self::FLAG_VALID] = true;
         }
@@ -207,9 +207,9 @@ class NullableConfig
     }
 
     /**
-     * @param array              $config
-     * @param list<string>       $path
-     * @param list<list<string>> $dotted
+     * @param array                 $config
+     * @param list<array-key>       $path
+     * @param list<list<array-key>> $dotted
      * @return list<string>
      */
     private static function findErrors(array $config, array $path = [], array &$dotted = []): array
