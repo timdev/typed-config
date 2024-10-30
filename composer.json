@@ -43,16 +43,16 @@
         }
     },
     "config": {
-        "sort-packages": true,
         "allow-plugins": {
             "ergebnis/composer-normalize": true
-        }
+        },
+        "sort-packages": true
     },
     "scripts": {
         "dev": "@dev:qa",
         "dev:analyze": "psalm",
-        "dev:coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always",
-        "dev:coverage:html": "XDEBUG_MODE=coverage phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
+        "dev:coverage": "XDEBUG_MODE=coverage php -d zend.assertions=1 vendor/bin/phpunit --coverage-text --colors=always",
+        "dev:coverage:html": "XDEBUG_MODE=coverage php -d zend.assertions=1 vendor/bin/phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
         "dev:cs": "phpcs",
         "dev:cs:fix": "phpcbf",
         "dev:qa": [
@@ -60,7 +60,7 @@
             "@dev:test",
             "@dev:cs"
         ],
-        "dev:test": "phpunit --testdox --color=always"
+        "dev:test": "php -d zend.assertions=1 vendor/bin/phpunit --testdox --color=always"
     },
     "scripts-descriptions": {
         "dev": "Shortcut for dev:qa.",
