@@ -37,6 +37,18 @@ class ConfigTest extends TestCase
         'spaces are' => ['actually fine' => 'see?'],
     ];
 
+    public static function setUpBeforeClass(): void
+    {
+        if ('1' !== ini_get('zend.assertions')) {
+            throw new \RuntimeException('Assertions (`zend.assertions = 1` in php.ini) must be enabled for this test suite');
+        }
+    }
+
+    public function testAssertionsAreOn(): void
+    {
+        assertSame('1', ini_get('zend.assertions'), 'Assertions must be enabled for this test suite');
+    }
+
     public function testCanReturnExpectedTypes(): void
     {
         $config = new Config($this->testConfig);
