@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TimDev\TypedConfig;
 
-use TimDev\TypedConfig\Exception\ContainsDottedKeys;
-
 use function assert;
 use function is_array;
 use function is_bool;

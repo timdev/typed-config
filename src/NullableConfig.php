@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace TimDev\TypedConfig;
 
 use LogicException;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 use TimDev\TypedConfig\Exception\ContainsDottedKeys;
 use TimDev\TypedConfig\Exception\InvalidConfigKey;
 use TimDev\TypedConfig\Exception\KeyNotFound;
