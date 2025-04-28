@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": "~8.2.27 || ~8.3.16 || ~8.4.3"
+        "php": "~8.3.16 || ~8.4.3"
     },
     "require-dev": {
         "timdev/devtools": "dev-main"
@@ -51,12 +51,6 @@
             "ramsey/devtools": true
         },
         "sort-packages": true
-    },
-    "extra": {
-        "ramsey/devtools": {
-            "command-prefix": "tools",
-            "commands": {}
-        }
     },
     "scripts": {
         "dev": "@dev:qa",
