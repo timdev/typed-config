@@ -22,13 +22,20 @@
             "email": "ej@ejmercado.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../devtools",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "require": {
-        "php": "~7.4.0 || ^8",
-        "symfony/polyfill-php80": "^1.23",
-        "symfony/polyfill-php81": "^1.23"
+        "php": "^8.3.20"
     },
     "require-dev": {
-        "timdev/devtools": "^0.1.6"
+        "timdev/devtools": "dev-main"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -44,9 +51,21 @@
     },
     "config": {
         "allow-plugins": {
-            "ergebnis/composer-normalize": true
+            "captainhook/plugin-composer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true,
+            "ramsey/composer-repl": true,
+            "ramsey/devtools": true
         },
         "sort-packages": true
+    },
+    "extra": {
+        "ramsey/devtools": {
+            "command-prefix": "tools",
+            "commands": {}
+        }
     },
     "scripts": {
         "dev": "@dev:qa",

@@ -15,7 +15,7 @@ use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     /** @var array<mixed> */
     private array $testConfig = [
@@ -37,6 +37,7 @@ class ConfigTest extends TestCase
         'spaces are' => ['actually fine' => 'see?'],
     ];
 
+    #[\Override]
     public static function setUpBeforeClass(): void
     {
         if ('1' !== ini_get('zend.assertions')) {
@@ -56,8 +57,9 @@ class ConfigTest extends TestCase
         assertSame('a string', $config->string('text'));
         assertSame(600, $config->int('timeout'));
         assertSame(9.8, $config->float('gravity_acceleration'));
-        assertIsArray($config->list('key_for_list'));
-        assertIsArray($config->hash('key_for_hash'));
+
+        assertIsArray($config->list('key_for_list')); // @phpstan-ignore-line
+        assertIsArray($config->hash('key_for_hash')); // @phpstan-ignore-line
     }
 
     public function testCanGetAnythingAsMixed(): void
@@ -214,6 +216,7 @@ class ConfigTest extends TestCase
         $config = new Config($this->testConfig);
         $flat = $config->toFlatArray();
         assertSame('qux', $flat['key_for_hash.baz']);
+        assertSame('a', $flat['key_for_list.0']);
         assertSame('strings', $flat['key_for_list.3']);
         assertSame('ACTUALLY, A ROPE', $flat['a.somewhat.deeply.nested.string']);
     }
@@ -223,6 +226,7 @@ class ConfigTest extends TestCase
         $config = new Config($this->testConfig);
         $flat = $config->toFlatArray('|-|');
         assertSame('qux', $flat['key_for_hash|-|baz']);
+        assertSame('a', $flat['key_for_list|-|0']);
         assertSame('strings', $flat['key_for_list|-|3']);
         assertSame('ACTUALLY, A ROPE', $flat['a|-|somewhat|-|deeply|-|nested|-|string']);
     }

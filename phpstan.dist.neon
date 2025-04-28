@@ -1,0 +1,17 @@
+parameters:
+    level: 9
+    tmpDir: ./build/cache/phpstan
+    paths:
+        - ./src
+        - ./tests
+
+    # Paths to exclude from analysis.
+    # See: https://phpstan.org/user-guide/ignoring-errors#excluding-whole-files
+    excludePaths:
+
+    ignoreErrors:
+        # Ignoring these for now, since I'm deferring stamping out get/set
+        # methods until they're actually needed.
+#        - '#Property .+::.+ is never written, only read.#'
+#        - '#Property .+::.+ is never read, only written.#'
+#        - '#Property .+::.+ is unused.#'

@@ -18,11 +18,15 @@ use function is_string;
 
 class NullableConfig
 {
+    /** @var array<string,mixed> */
     protected array $config;
 
+    /**
+     * @param array<mixed> $config
+     */
     protected function __construct(array $config)
     {
-        $this->config = $config;
+        $this->config = self::validate($config);
     }
 
     public function string(string $key): ?string
@@ -67,7 +71,7 @@ class NullableConfig
 
             if (!is_array($current[$k])) {
                 // Dead End: Can't descend lower than $path, because it points at a non-array
-                throw new KeyNotFound($key, $path, (string) $current[$k]);
+                throw new KeyNotFound($key, $path, var_export($current[$k], true));
             }
 
             // We have to (and can) go deeper!
@@ -129,6 +133,7 @@ class NullableConfig
         return $config;
     }
 
+    /** @return array<string,mixed>|null */
     public function hash(string $key): ?array
     {
         $val = $this->mixed($key);
@@ -136,10 +141,11 @@ class NullableConfig
             return $val;
         }
         assert(is_array($val), "Expected a hash at '$key', but it isn't an array");
-        assert(!array_is_list($val) || count($val) === 0, "Expected a hash at '$key', but found a list");
+        self::assertHasOnlyStringKeys($val);
         return $val;
     }
 
+    /** @return array<string,mixed> */
     public function toArray(): array
     {
         $clone = $this->config;
@@ -147,18 +153,22 @@ class NullableConfig
         return $clone;
     }
 
-    /** @return array<string,mixed> */
+    /**
+     * @param array<mixed> $array
+     * @return array<string,mixed>
+     */
     private static function dot(array $array, string $delim = '.', string $prepend = ''): array
     {
+        /** @var list<array<string,mixed>> $results */
         $results = [];
 
-        /** @psalm-var mixed $value */
+        /** @var mixed $value */
         foreach ($array as $key => $value) {
             if (is_array($value) && ! empty($value)) {
-                $results[] = static::dot($value, $delim, $prepend . $key . $delim);
+                $results[] = self::dot($value, $delim, $prepend . $key . $delim);
             } else {
-                /** @var mixed */
-                $results[][$prepend . $key] = $value;
+                $results[] = [ $prepend . $key => $value ];
+//                $results[][$prepend . $key] = $value;
             }
         }
 
@@ -184,14 +194,14 @@ class NullableConfig
      * validate() will always have this key set. This behavior exists to enable
      * fast instantiation of cached known-good data.
      */
-    public const FLAG_VALID = '_TimDevTypedConfig_Valid';
+    public const string FLAG_VALID = '_TimDevTypedConfig_Valid';
 
     /**
      * Sets validity flag in $array and returns it, or throws if array contains
      * dotted-string keys.
      *
-     * @param array $array
-     * @return array
+     * @param array<mixed> $array
+     * @return array<string,mixed>
      * @throws ContainsDottedKeys
      */
     public static function validate(array &$array): array
@@ -199,13 +209,15 @@ class NullableConfig
         // only skip validation if flag is set to boolean true.
         if (($array[self::FLAG_VALID] ?? false) !== true) {
             self::assertNoDottedKeys($array);
+            self::assertHasOnlyStringKeys($array);
             $array[self::FLAG_VALID] = true;
         }
+        /** @var array<string,mixed> $array */
         return $array;
     }
 
     /**
-     * @param array                 $config
+     * @param array<mixed>          $config
      * @param list<array-key>       $path
      * @param list<list<array-key>> $dotted
      * @return list<string>
@@ -228,11 +240,25 @@ class NullableConfig
         );
     }
 
+    /**
+     * @param array<mixed> $array
+     */
     private static function assertNoDottedKeys(array $array): void
     {
         $dotted = self::findErrors($array);
         if (count($dotted) > 0) {
             throw ContainsDottedKeys::from($dotted);
+        }
+    }
+
+    /**
+     * @param array<mixed> $array
+     * @psalm-assert array<string,mixed> $array
+     */
+    protected static function assertHasOnlyStringKeys(array $array): void
+    {
+        foreach (array_keys($array) as $key) {
+            assert(is_string($key), "Expected string keys in array, but found a non-string key");
         }
     }
 }

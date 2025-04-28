@@ -12,7 +12,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsString;
 
-class ValidationTest extends TestCase
+final class ValidationTest extends TestCase
 {
     public function testConstructorThrowsOnTopLevelDottedKeys(): void
     {
