@@ -9,7 +9,12 @@ be overwritten when that package is updated.
 
 If you need to override anything, create a non-.dist phpcs.xml!
 -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.1/phpunit.xsd" bootstrap="./vendor/autoload.php" colors="true" cacheDirectory=".phpunit.cache">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+        bootstrap="./vendor/autoload.php"
+        colors="true"
+        cacheDirectory="build/cache/phpunit">
   <php>
     <ini name="assert.exception" value="On"/>
   </php>

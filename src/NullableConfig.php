@@ -21,9 +21,7 @@ class NullableConfig
     /** @var array<string,mixed> */
     protected array $config;
 
-    /**
-     * @param array<mixed> $config
-     */
+    /** @param array<mixed> $config */
     protected function __construct(array $config)
     {
         $this->config = self::validate($config);
@@ -40,8 +38,7 @@ class NullableConfig
         return $val;
     }
 
-    /** @return mixed */
-    public function mixed(string $key)
+    public function mixed(string $key): mixed
     {
         $key = trim($key);
 

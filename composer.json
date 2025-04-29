@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": "~8.3.16 || ~8.4.3"
+        "php": "~8.3.0 || ~8.4.0"
     },
     "require-dev": {
         "timdev/devtools": "dev-main"
@@ -42,21 +42,20 @@
     },
     "config": {
         "allow-plugins": {
-            "captainhook/plugin-composer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "ergebnis/composer-normalize": true,
-            "php-http/discovery": true,
-            "phpstan/extension-installer": true,
-            "ramsey/composer-repl": true,
-            "ramsey/devtools": true
+            "ergebnis/composer-normalize": true
         },
         "sort-packages": true
     },
     "scripts": {
         "dev": "@dev:qa",
-        "dev:analyze": "psalm",
-        "dev:coverage": "XDEBUG_MODE=coverage php -d zend.assertions=1 vendor/bin/phpunit --coverage-text --colors=always",
-        "dev:coverage:html": "XDEBUG_MODE=coverage php -d zend.assertions=1 vendor/bin/phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
+        "dev:analyze": [
+            "@dev:analyze:psalm",
+            "@dev:analyze:phpstan"
+        ],
+        "dev:analyze:phpstan": "phpstan",
+        "dev:analyze:psalm": "psalm",
+        "dev:coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always",
+        "dev:coverage:html": "XDEBUG_MODE=coverage phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
         "dev:cs": "phpcs",
         "dev:cs:fix": "phpcbf",
         "dev:qa": [
@@ -64,11 +63,13 @@
             "@dev:test",
             "@dev:cs"
         ],
-        "dev:test": "php -d zend.assertions=1 vendor/bin/phpunit --testdox --color=always"
+        "dev:test": "phpunit --testdox --color=always"
     },
     "scripts-descriptions": {
         "dev": "Shortcut for dev:qa.",
-        "dev:analyze": "Run static analysis with psalm.",
+        "dev:analyze": "Run static analysis with both psalm + phpstan.",
+        "dev:analyze:phpstan": "Run static analysis with phpstan.",
+        "dev:analyze:psalm": "Run static analysis with psalm.",
         "dev:coverage": "Report unit test coverage with output in the terminal.",
         "dev:coverage:html": "Generate unit test coverage report.",
         "dev:cs": "Run code style checks.",

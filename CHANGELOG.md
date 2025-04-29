@@ -19,6 +19,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## 0.2.0 - 2025-05-28
+
+### Added
+
+* Added support for PHP 8.2
+* Added PHPStan for additional static analysis
+
+### Changed
+
+* Modernized dependencies and supported PHP versions.
+  * Moved from Psalm 5.x to 6.x 
+
+### Removed
+
+* Removed support for PHP <8.3
+
+## 0.1.3 - 2024-10-30
+
+### Added 
+
+* Test suite now complains more helpfully if you run it with
+  `zend.assertions` set to something other than `1`.
+
 ## 0.1.2 - 2021-12-19
 
 ### Added
